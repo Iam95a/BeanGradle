@@ -17,6 +17,7 @@ public class Bean2Map extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
+
         PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
         if (psiFile == null) return;
         WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
