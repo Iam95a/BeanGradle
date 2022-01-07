@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>org.example.BeanGradle</id>
-    <name>Plugin display name here</name>
+    <name>bean各种代码生成</name>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
     <description><![CDATA[
@@ -36,9 +36,15 @@
         </action>
 
         <!-- Add your actions here -->
-        <action id="InsertEnumComment" class="com.chen.InsertEnumCommet" text="insertEnumComment">
+        <action id="InsertEnumComment" class="com.chen.InsertEnumCommet" text="InsertEnumComment">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt C"/>
+        </action>
+
+        <!-- Add your actions here -->
+        <action id="ReplaceAllArgsConstructors" class="com.chen.InsertAllArgsConstructor" text="ReplaceAllArgs">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt I"/>
         </action>
     </actions>
 </idea-plugin>
