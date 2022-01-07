@@ -1,4 +1,4 @@
-package com.chen;
+package com.chen.util;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
