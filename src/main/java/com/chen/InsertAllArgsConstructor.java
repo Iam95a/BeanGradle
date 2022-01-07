@@ -63,7 +63,9 @@ public class InsertAllArgsConstructor extends AnAction {
             if (psiFields != null && psiFields.length > 0) {
                 StringBuilder consHeader = new StringBuilder("public " + psiClass.getName() + "(");
                 StringBuilder consContent = new StringBuilder();
-                for (PsiField psiField : psiFields) {
+                for (int j = 0; j < psiFields.length; j++) {
+
+                    PsiField psiField=psiFields[j];
                     if (psiField.getText().contains("=")) {
                         continue;
                     }
@@ -79,13 +81,14 @@ public class InsertAllArgsConstructor extends AnAction {
                         }
                         if (ele instanceof PsiIdentifier) {
                             consHeader.append(ele.getText());
-                            if (i < (list.size() - 1)) {
+                            if (j < (psiFields.length - 1)) {
                                 consHeader.append(",");
                             }
                             consContent.append("this.").append(ele.getText()).append("=").append(ele.getText()).append(";\n");
                         }
                     }
                 }
+
                 consHeader.append("){");
                 consContent.append("}");
                 PsiElementFactory psiElementFactory = JavaPsiFacade.getElementFactory(project);
