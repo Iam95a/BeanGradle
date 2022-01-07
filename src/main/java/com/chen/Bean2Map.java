@@ -8,7 +8,11 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author cjw
@@ -19,19 +23,24 @@ public class Bean2Map extends AnAction {
     public void actionPerformed(AnActionEvent e) {
 
         PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        if (psiFile == null) return;
+        if (psiFile == null){ return;}
         WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
             Editor editor = e.getData(PlatformDataKeys.EDITOR);
-            if (editor == null) return;
+            if (editor == null) {return;}
             Project project = editor.getProject();
-            if (project == null) return;
+            if (project == null) {return;}
 
             PsiElement element = psiFile.findElementAt(editor.getCaretModel().getOffset());
             PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-            if (psiClass == null) return;
+            if (psiClass == null) {return;}
 
-            if (psiClass.getNameIdentifier() == null) return;
-
+            if (psiClass.getNameIdentifier() == null) {return;}
+            try {
+                ImportUtil.importClass(Map.class,project,element.getContainingFile());
+                ImportUtil.importClass(HashMap.class,project,element.getContainingFile());
+            }catch (Exception exception ){
+                System.out.println(exception.getMessage());
+            }
             PsiField[] psiFields = psiClass.getAllFields();
             String dto2Map = "public Map<String,String> dto2Map(){\n" +
                     "    Map<String,String> map=new HashMap();\n";

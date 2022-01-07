@@ -23,5 +23,16 @@
             <add-to-group group-id="GenerateGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt B"/>
         </action>
+        <!-- Add your actions here -->
+        <action id="Bean2ExcelMap" class="com.chen.Bean2ExcelMap" text="bean2ExcelMap">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt M"/>
+        </action>
+
+        <!-- Add your actions here -->
+        <action id="BeanInsert" class="com.chen.BeanInsertApiModel" text="beanInsertApiModel">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt V"/>
+        </action>
     </actions>
 </idea-plugin>
