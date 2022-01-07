@@ -60,26 +60,31 @@ public class InsertAllArgsConstructor extends AnAction {
                 }
             }
             PsiField[] psiFields = psiClass.getAllFields();
-            if(psiFields!=null&&psiFields.length>0) {
+            if (psiFields != null && psiFields.length > 0) {
                 StringBuilder consHeader = new StringBuilder("public " + psiClass.getName() + "(");
                 StringBuilder consContent = new StringBuilder();
                 for (PsiField psiField : psiFields) {
                     if (psiField.getText().contains("=")) {
                         continue;
                     }
+                    if(!psiField.getText().contains("private")){
+                        continue;
+                    }
                     List<PsiElement> list = new ArrayList(Arrays.asList(psiField.getChildren()));
                     list = list.stream().filter(l -> l instanceof PsiTypeElement || l instanceof PsiIdentifier).collect(Collectors.toList());
-                    for (PsiElement ele : list) {
+                    for (int i = 0; i < list.size(); i++) {
+                        PsiElement ele = list.get(i);
                         if (ele instanceof PsiTypeElement) {
                             consHeader.append(ele.getText()).append(" ");
                         }
                         if (ele instanceof PsiIdentifier) {
-                            consHeader.append(ele.getText()).append(",");
+                            consHeader.append(ele.getText());
+                            if (i < (list.size() - 1)) {
+                                consHeader.append(",");
+                            }
                             consContent.append("this.").append(ele.getText()).append("=").append(ele.getText()).append(";\n");
                         }
                     }
-
-
                 }
                 consHeader.append("){");
                 consContent.append("}");
