@@ -18,6 +18,7 @@ dependencies {
 intellij {
     plugins = ['java']
     version '2020.1'
+    updateSinceUntilBuild false
 }
 patchPluginXml {
     changeNotes """
