@@ -25,7 +25,9 @@ public class BeanInsertApiModel extends AnAction {
     public void actionPerformed(AnActionEvent e) {
 
         PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        if (psiFile == null){ return;}
+        if (psiFile == null) {
+            return;
+        }
         WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
             Editor editor = e.getData(PlatformDataKeys.EDITOR);
             if (editor == null) {
@@ -43,7 +45,7 @@ public class BeanInsertApiModel extends AnAction {
                 if (importClass != null) {
                     ((PsiImportHolder) element.getContainingFile()).importClass(importClass);
                 }
-            }catch (Exception exception ){
+            } catch (Exception exception) {
                 System.out.println(exception.getMessage());
             }
             if (psiClass == null) {
@@ -54,6 +56,19 @@ public class BeanInsertApiModel extends AnAction {
             }
             PsiField[] psiFields = psiClass.getAllFields();
             for (PsiField psiField : psiFields) {
+                PsiAnnotation[] annos = psiField.getAnnotations();
+                boolean hasApiModel = false;
+                if (annos.length > 0) {
+                    for (PsiAnnotation anno : annos) {
+                        if (anno.getText().contains("ApiModelProperty")) {
+                            hasApiModel = true;
+                            break;
+                        }
+                    }
+                }
+                if (hasApiModel) {
+                    continue;
+                }
                 PsiDocComment psiDocComment = psiField.getDocComment();
                 if (psiDocComment == null) {
                     continue;
@@ -70,6 +85,7 @@ public class BeanInsertApiModel extends AnAction {
                     PsiElementFactory psiElementFactory = JavaPsiFacade.getElementFactory(project);
                     PsiAnnotation psiAnnotation = psiElementFactory.createAnnotationFromText("@ApiModelProperty(value = \"" + sb.toString() + "\")", psiClass);
                     psiClass.addAfter(psiAnnotation, psiDocComment);
+
                 }
             }
         });

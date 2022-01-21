@@ -1,5 +1,6 @@
 package com.chen;
 
+import com.chen.util.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -65,11 +66,14 @@ public class InsertAllArgsConstructor extends AnAction {
                 StringBuilder consContent = new StringBuilder();
                 for (int j = 0; j < psiFields.length; j++) {
 
-                    PsiField psiField=psiFields[j];
+                    PsiField psiField = psiFields[j];
                     if (psiField.getText().contains("=")) {
                         continue;
                     }
-                    if(!psiField.getText().contains("private")){
+                    if (!psiField.getText().contains("private")) {
+                        continue;
+                    }
+                    if (AnnotationUtil.isPsiFieldHasAnnotation(psiField, "Value")) {
                         continue;
                     }
                     List<PsiElement> list = new ArrayList(Arrays.asList(psiField.getChildren()));
@@ -82,7 +86,7 @@ public class InsertAllArgsConstructor extends AnAction {
                         if (ele instanceof PsiIdentifier) {
                             consHeader.append(ele.getText());
                             if (j < (psiFields.length - 1)) {
-                                consHeader.append(",");
+                                consHeader.append(",\n");
                             }
                             consContent.append("this.").append(ele.getText()).append("=").append(ele.getText()).append(";\n");
                         }
