@@ -62,11 +62,26 @@ public class InsertAllArgsConstructor extends AnAction {
             }
             PsiField[] psiFields = psiClass.getAllFields();
             if (psiFields != null && psiFields.length > 0) {
+                List<PsiField> psiFieldList = new ArrayList<>(Arrays.asList(psiFields));
+                psiFieldList = psiFieldList.stream().filter(psiField ->
+                        {
+                            if (psiField.getText().contains("=")) {
+                                return false;
+                            }
+                            if (!psiField.getText().contains("private")) {
+                                return false;
+                            }
+                            if (AnnotationUtil.isPsiFieldHasAnnotation(psiField, "Value")) {
+                                return false;
+                            }
+                            return true;
+                        }
+                ).collect(Collectors.toList());
                 StringBuilder consHeader = new StringBuilder("public " + psiClass.getName() + "(");
                 StringBuilder consContent = new StringBuilder();
-                for (int j = 0; j < psiFields.length; j++) {
+                for (int j = 0; j < psiFieldList.size(); j++) {
 
-                    PsiField psiField = psiFields[j];
+                    PsiField psiField = psiFieldList.get(j);
                     if (psiField.getText().contains("=")) {
                         continue;
                     }
@@ -85,7 +100,7 @@ public class InsertAllArgsConstructor extends AnAction {
                         }
                         if (ele instanceof PsiIdentifier) {
                             consHeader.append(ele.getText());
-                            if (j < (psiFields.length - 1)) {
+                            if (j < (psiFieldList.size() - 1)) {
                                 consHeader.append(",\n");
                             }
                             consContent.append("this.").append(ele.getText()).append("=").append(ele.getText()).append(";\n");
